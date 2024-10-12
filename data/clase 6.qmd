@@ -1,0 +1,59 @@
+---
+title: "como usar quarto"
+author: "Gimena Vega Chavez"
+format:
+  html:
+    toc: true
+    toc-location: left
+    number-sections: true
+    embed-resources: true
+    output-file: index
+---
+```{r}
+
+```
+
+# Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this 
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+
+#como usar quarto?
+
+## Fuentes
+
+- Negrita: **esto es fuente negrita**
+- Cursiva: _solanum tuberosum_
+
+## Fórmulas matemáticas
+
+-Esta es el area de una circunferencia $Area_c=pi\ \cdot\ r^2$
+
+
+-Esta es una formula cualquiera $$\frac{\left(2x-1\right)^{^2}-1}{4}=K$$
+
+
+# Mi primera pagina web
+
+1. Tener mi proyecto
+1. Conectar mi proyecto a github
+1. Tener un archivo en formato html llamado `index.html`
+1. Hacer push en repositorio
+1. Activar Github pages
