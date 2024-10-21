@@ -62,7 +62,7 @@ The `echo: false` option disables the printing of code (only output is displayed
 
 # Modelos lineales mixtos
 
-## Importar datos
+##Importar datos
 
 ```{r}
 
@@ -161,8 +161,45 @@ modelo <- remove_outliers(data = fb
 model
 ```
 
+#Comparacion de medias
+
+```{r}
+modelo <- lm(formula = lfa ~  bloque + riego + geno + riego*geno
+          , data = fb)
+
+anova(modelo)
+
+library(agricolae)
+tukey_result <- HSD.test(modelo,
+                         c("geno", "riego")
+                         , group = TRUE)
+print(tukey_result)
+plot(tukey_result)
 
 
+tukey_result
 
 
+grupos <- tukey_result$groups %>% 
+  rownames_to_column("tratamientos") %>% 
+  separate(tratamientos, into = c("geno", "riego"))
+
+
+  
+str(grupos)
+```
+```{r}
+# Cargar ggplot2 para la visualización
+library(ggplot2)
+
+# Crear un gráfico de barras con los grupos de Tukey
+ggplot(grupos, aes(x = geno, y = lfa, fill = riego)) +
+  geom_bar(stat = "identity", position = "dodge", color = 
+             "black")+  
+  labs(x = "Genotipo", y = "LFA", fi11 = "riego") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ggtitle("Gráfico de barras: LFA por genotipo y riego")
+
+```
 
