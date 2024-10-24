@@ -82,7 +82,7 @@ str(fb)
 
 ```
 
-## Modelo lineal lfa
+# Modelo lineal lfa
 
 ```{r}
 modelo <- aov (formula = lfa ~  bloque + riego + geno + riego*geno
@@ -108,7 +108,7 @@ ggplot(fb, aes(x = geno, y = lfa, colour = riego)) +
 
 ```
 
-## Modelo lineal de hi
+# Modelo lineal de hi
 
 ```{r}
 modelo <- aov(formula = hi ~  bloque + riego + geno + riego*geno
@@ -135,7 +135,7 @@ ggplot(fb, aes(x = geno, y = hi, colour = riego)) +
 
 ```
 
-## Modelo lineal mixto: lfa
+# Modelo lineal mixto: lfa
 
 
 
@@ -200,6 +200,68 @@ ggplot(grupos, aes(x = geno, y = lfa, fill = riego)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   ggtitle("Gráfico de barras: LFA por genotipo y riego")
+
+```
+```{r}
+ggplot(grupos, aes(x = geno, y = lfa, fill = riego)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(aes(label = groups),  # Mostrar 'groups' como etiqueta
+            position = position_dodge(width = 0.9), 
+            vjust = -0.3) +  # Ajusta la posición vertical de las etiquetas
+  labs(title = "Efecto de Geno y Riego en LFA",
+       x = "Genotipo",
+       y = "LFA") +
+  theme_minimal() +
+  scale_fill_discrete(name = "Riego") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+##emmeans: comparación de medias 
+
+```{r}
+modelo <- lme4::lmer(hi ~ (1|bloque)+ geno * riego
+                     , data = fb)
+anova(modelo)
+
+source('https://inkaverse.com/setup.r')
+library (emmeans)
+library (multcomp)
+
+
+cm1 <- emmeans(modelo,~ geno | riego) %>% 
+  cld(Letters=letters, reversed = T)
+cm1
+
+cm2 <- emmeans(modelo,~ riego | geno) %>% 
+  cld(Letters=letters, reversed = T)
+cm2
+
+cm3 <- emmeans(modelo,~ riego * geno) %>% 
+  cld(Letters=letters, reversed = T)
+
+cm3
+
+```
+## Gráfico 
+
+```{r}
+
+dtcm <- as.data.frame(cm2) %>% 
+  rename (sig=".group")
+  
+
+library(ggplot2)
+
+
+ggplot(dtcm, aes(x = geno, y = emmean, fill = riego)) +
+  geom_bar(stat = "identity", position = "dodge", color = "black") +  
+  geom_text(aes(label=sig, y =emmean),
+            position = position_dodge(width=0.9),
+            vjust=0) +
+  labs(x = "Genotipo", y = "Media Estimada (HIean)", fill = "Riego") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ggtitle("Gráfico de barras: HI por genotipo y riego")
 
 ```
 

@@ -1,0 +1,59 @@
+---
+title: "Evaluación de variables de los genotipos de papa, frente a condiciones de estrés hídrico por sequía"
+author: "Grupo-D"
+format: 
+  html:
+    toc: true
+    toc-location: left
+    number-sections: true
+    embed-resources: true
+    output-file: index
+---
+#Introducción 
+
+
+#Data para la evalucion de variables  
+
+```{r}
+
+source('https://inkaverse.com/setup.r')
+
+
+url <- "https://docs.google.com/spreadsheets/d/15r7ZwcZZHbEgltlF6gSFvCTFA-CFzVBWwg3mFlRyKPs/edit?gid=172957346#gid=172957346"
+
+gs <- url %>% 
+  as_sheets_id()
+
+fb <- gs %>% 
+  range_read("fb")
+
+
+str(fb)
+
+```
+
+#Evaluacion del analisis de varianza en Soil Plant Analysis Development
+```{r}
+modelo <- aov (formula = spad_29 ~  bloque + riego + geno + riego*geno
+          , data = fb)
+
+anova(modelo)
+#En el anova se nuestra un nivel de significancia entre sequia y el genotipo 
+
+plot(modelo)
+```
+Graficacion del modelo lineal para la variable de soil plant analysis ..
+```{r}
+ggplot(fb, aes(x = geno, y = spad_29, colour = riego)) +
+  geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 2) +
+  labs(title = "Boxplot con interacción de niveles de riego y genotipo",
+       x = "Interacción Riego y Genotipo",
+       y = "Soil Plant Analysis Development")
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Inclinar etiquetas del eje X
+  
+  #interpretcion 
+```
+
+
+
