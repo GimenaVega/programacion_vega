@@ -9,10 +9,12 @@ format:
     embed-resources: true
     output-file: index
 ---
+
 #Introducción 
 
 
 #Data para la evalucion de variables  
+
 
 ```{r}
 
@@ -32,7 +34,9 @@ str(fb)
 
 ```
 
+
 #Evaluacion del analisis de varianza en Soil Plant Analysis Development
+
 ```{r}
 modelo <- aov (formula = spad_29 ~  bloque + riego + geno + riego*geno
           , data = fb)
@@ -42,7 +46,9 @@ anova(modelo)
 
 plot(modelo)
 ```
+
 Graficacion del modelo lineal para la variable de soil plant analysis ..
+
 ```{r}
 ggplot(fb, aes(x = geno, y = spad_29, colour = riego)) +
   geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 2) +
@@ -54,11 +60,10 @@ ggplot(fb, aes(x = geno, y = spad_29, colour = riego)) +
   
  
 ```
+
  #escribir aqui
+
 ```{r}
 ejecutar  codigos 
 ```
- 
- 
-
 
