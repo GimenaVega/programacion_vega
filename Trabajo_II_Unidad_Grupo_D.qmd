@@ -1,0 +1,296 @@
+---
+title: "Impacto del estrés hídrico en la eficiencia de agua en el cultivo de papa, un estudio basado en spad_29 y rwc_84"
+
+author: "Nilson Julca Celiz, Lleyner Roman Peña, Alex Quispe Agular y Gimena Vega Chavez"
+format: 
+  html:
+    toc: true
+    toc-location: left
+    number-sections: true
+    embed-resources: true
+    output-file: index
+---
+# Introducción 
+
+
+Dentro del marco de la tesis, rescatamos al cultivo de papa como clave en la agricultura mundial, pero es particularmente vulnerable al estrés hídrico, lo cual muchas veces va a reducir su rendimiento y calidad. El estudio de variables como el "Relative water content (RWC)" y el "Soil plant analysis development(spad_29)" y la relación entre ellas ha permitido poder identificar genotipos de papa mas resilientes a la sequía esto con el fin de optimizar el uso de recursos hídricos en la producción. Ahora al realizar una página web basada en R, esta plataforma nos va a poder ofrecer herramientas analiticas y estadisticas especializadas para evaluar estos indicadores, ayudando sobre todo a investigadores a tomar decisiones con mayor eficacia y bien informadas para contribuir con la agricultura. 
+
+
+# Data para la evalucion de variables  
+
+```{r}
+
+source('https://inkaverse.com/setup.r')
+
+
+url <- "https://docs.google.com/spreadsheets/d/15r7ZwcZZHbEgltlF6gSFvCTFA-CFzVBWwg3mFlRyKPs/edit?gid=172957346#gid=172957346"
+
+gs <- url %>% 
+  as_sheets_id()
+
+fb <- gs %>% 
+  range_read("fb")
+
+
+str(fb)
+
+```
+
+# Análisis de varianza en Soil Plant Analysis Development (spad_20) en respuesta a tratamientos de riego y genotipos de papa
+
+
+
+```{r}
+
+modelo <- aov (formula = spad_29 ~  bloque + riego + geno + riego*geno
+          , data = fb)
+
+anova(modelo)
+
+#En el anova se nuestra un nivel de significancia entre sequia y el genotipo 
+
+plot(modelo)
+```
+
+Interpretación:
+
+Con el análisis de varianza (ANOVA) se hizo con el fin de poder examinar diferentes factores (bloques, tratamiento de riego, genotipo * riego) sobre el índice de spad_29.
+Según el grafico y resultado en este caso el efecto significativo de los genotipos sugiere que el índice de spad_29 podría verse como un criterio de selección efetivo para identificar genotipos de papa para poder ver las mejores condiciones de estrés hídrico.
+
+## Modelo lineal para la variable de Soil Plant Analysis Development en genotipos de papa bajo diferentes condiciones de riego 
+
+```{r}
+ggplot(fb, aes(x = geno, y = spad_29, colour = riego)) +
+  geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 2) +
+  labs(title = "Boxplot con interacción de niveles de riego y genotipo",
+       x = "Interacción Riego y Genotipo",
+       y = "Soil Plant Analysis Development")
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Inclinar etiquetas del eje X
+  
+ 
+```
+
+
+Interpretación: Se puede visualizar el gráfico de cajas (boxplot) muestra la distribución del índice spad_29, entre distintos genotipos de papa en dos condicones de riego (irrigado y sequía). Las cajas de color rosa representan el tratamiento de irrigado y las celestes la sequía. Esto conincide con el analisis de ANOVA, donde no se detecto un efecto significativo del factor de riego sobre spad_29. 
+
+# Modelo lineal de Relative Water Content (%)
+
+```{r}
+
+modelo <- aov(formula = rwc_84 ~  bloque + riego + geno + riego*geno
+          , data = fb)
+
+anova(modelo)
+
+plot(modelo)
+
+```
+
+Interpretación: Los puntos representan los residuos estandarizados de cada observación en los distintos niveles del factor "bloque" (I a V). La línea roja suavizada indica la tendencia de los residuos a través de los niveles.La dispersión de los residuos es bastante uniforme en todos los bloques, lo cual sugiere que el supuesto de homocedasticidad es razonablemente cumplido para el modelo de RWC_84.
+
+## Graficación del modelo lineal para la variable Relative Water Content (%)
+
+```{r}
+
+ggplot(fb, aes(x = geno, y = rwc_84, colour = riego)) +
+  geom_boxplot(outlier.colour = "red", outlier.shape = 16, outlier.size = 2) +
+  labs(title = "Boxplot con interacción de niveles de riego y genotipo",
+       x = "Interacción Riego y Genotipo",
+       y = "Relative Water Content (cm^2)")
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Inclinar etiquetas del eje X
+  
+```
+
+# Modelo lineal mixto para evaluar Soil Plant Analysis Development (spad_29)
+
+```{r}
+library (lme4)
+library(lmerTest)
+model <- lme4::lmer(spad_29 ~ riego + geno + riego*geno + (1|bloque), data = fb)
+anova(model)
+
+plot(model)
+
+ol <- boxplot(spad_29 ~riego*geno, fb)
+ol
+
+```
+
+Interpretación: El modelo lineal mixto muestra que en su grafico el genotipo tiene un impacto significativo sobre el índice SPAD_29, mientras que el efecto de riego y su interacción pueden no ser tan relevantes. Esto podría indicar que las diferencias en el contenido de clorofila entre genotipos son intrínsecas a la planta y no necesariamente dependientes del régimen de riego.
+
+```{r}
+library (inti)
+modelo <- remove_outliers(data = fb
+                        ,formula = lfa ~ riego + geno + riego*geno + (1|bloque) 
+                        ,plot_diag = T)
+
+model
+```
+
+# Comparación de medias para evaluar el efecto de genotipo y riego sobre spad_29
+
+```{r}
+modelo <- lm(formula = spad_29 ~  bloque + riego + geno + riego*geno
+          , data = fb)
+
+anova(modelo)
+
+library(agricolae)
+tukey_result <- HSD.test(modelo,
+                         c("geno", "riego")
+                         , group = TRUE)
+print(tukey_result)
+plot(tukey_result)
+
+
+tukey_result
+
+
+grupos <- tukey_result$groups %>% 
+  rownames_to_column("tratamientos") %>% 
+  separate(tratamientos, into = c("geno", "riego"))
+
+
+  
+str(grupos)
+```
+
+Interpretación: La prueba de Tukey sugiere que existen diferencias significativas en el índice SPAD_29 entre algunos genotipos y combinaciones de tratamientos de riego. 
+
+```{r}
+# Cargar ggplot2 para la visualización
+library(ggplot2)
+
+# Crear un gráfico de barras con los grupos de Tukey
+ggplot(grupos, aes(x = geno, y = spad_29, fill = riego)) +
+  geom_bar(stat = "identity", position = "dodge", color = 
+             "black")+  
+  labs(x = "Genotipo", y = "spad_29", fi11 = "riego") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ggtitle("Gráfico de barras: spad_29 por genotipo y riego")
+```
+
+Interpretación: El gráfico generado por la prueba de Tukey visualiza los grupos de medias con diferentes niveles de significancia. Las líneas indican los intervalos de confianza de las medias de cada combinación de genotipo y riego, facilitando la visualización de las diferencias entre grupos.
+
+```{r}
+ggplot(grupos, aes(x = geno, y = spad_29, fill = riego)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  geom_text(aes(label = groups),  # Mostrar 'groups' como etiqueta
+            position = position_dodge(width = 0.9), 
+            vjust = -0.3) +  # Ajusta la posición vertical de las etiquetas
+  labs(title = "Efecto de Geno y Riego en spad_29",
+       x = "Genotipo",
+       y = "spad_29") +
+  theme_minimal() +
+  scale_fill_discrete(name = "Riego") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## emmeans: comparación de medias ajustadas para los efectos de geno y riego en el desarollo de rwc_84
+
+```{r}
+modelo <- lme4::lmer(rwc_84 ~ (1|bloque)+ geno * riego
+                     , data = fb)
+anova(modelo)
+
+source('https://inkaverse.com/setup.r')
+library (emmeans)
+library (multcomp)
+
+
+cm1 <- emmeans(modelo,~ geno | riego) %>% 
+  cld(Letters=letters, reversed = T)
+cm1
+
+cm2 <- emmeans(modelo,~ riego | geno) %>% 
+  cld(Letters=letters, reversed = T)
+cm2
+
+cm3 <- emmeans(modelo,~ riego * geno) %>% 
+  cld(Letters=letters, reversed = T)
+
+cm3
+```
+
+Interpretación: Se realizó un análisis de varianza (ANOVA) para determinar si existían diferencias significativas en rwc_84 asociadas a los tratamientos aplicados.
+
+## Gráfico de barras de la media estimada de rwc_84
+
+```{r}
+dtcm <- as.data.frame(cm2) %>% 
+  rename (sig=".group")
+  
+
+library(ggplot2)
+
+
+ggplot(dtcm, aes(x = geno, y = emmean, fill = riego)) +
+  geom_bar(stat = "identity", position = "dodge", color = "black") +  
+  geom_text(aes(label=sig, y =emmean),
+            position = position_dodge(width=0.9),
+            vjust=0) +
+  labs(x = "Genotipo", y = "Media Estimada (rwc_84 ean)", fill = "Riego") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ggtitle("Gráfico de barras: rwc_84 por genotipo y riego")
+
+```
+
+Interpretación; El gráfico de barras muestra la media estimada de la variable rwc_84 (potencial hídrico relativo a 84 días) para diferentes genotipos, las barras están codificadas por colores, donde cada color representa una modalidad de riego.
+
+
+# Analisis multivariado
+
+```{r}
+str(fb)
+
+```
+
+## Correlación de las variables
+
+```{r}
+library(psych)
+library(tidyverse)
+fb %>% 
+  select_if(is.numeric) %>% 
+  dplyr::select(!c("block")) %>% 
+  pairs.panels(x= .
+                , hist.col="red"
+                , pch= 21
+                , stars= TRUE
+                , scale = FALSE
+                , lm = TRUE
+               )
+
+```
+
+Interpretación:  Se pueden observar tanto correlaciones positivas como negativas.
+
+### PCA: Análisis de componentes principales
+
+```{r}
+library(FactoMineR)
+library(cowplot)
+
+mv <- fb %>% 
+  group_by(riego, geno) %>% 
+  summarise(across(where(is.numeric),~ mean(.,na.rm = TRUE))) %>% 
+  
+  PCA(scale.unit = T, quali.sup = c(1:4), graph = F)
+
+p1 <- plot(mv
+     , choix="ind"
+     , habillage=1
+     , label = "ind"
+     )
+
+p2 <- plot(mv
+     , choix="var")
+
+list(p1, p2) %>% 
+  plot_grid(plotlist= ., nrow = 1)
+```
+

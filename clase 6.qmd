@@ -62,7 +62,7 @@ The `echo: false` option disables the printing of code (only output is displayed
 
 # Modelos lineales mixtos
 
-##Importar datos
+## Importar datos
 
 ```{r}
 
@@ -94,7 +94,7 @@ plot(modelo)
 
 ```
 
-### boxplot
+## boxplot
 
 ```{r}
 
@@ -120,7 +120,7 @@ plot(modelo)
 
 ```
 
-### boxplot 
+## boxplot 
 
 
 ```{r}
@@ -161,7 +161,7 @@ modelo <- remove_outliers(data = fb
 model
 ```
 
-#Comparacion de medias
+# Comparacion de medias
 
 ```{r}
 modelo <- lm(formula = lfa ~  bloque + riego + geno + riego*geno
@@ -216,7 +216,7 @@ ggplot(grupos, aes(x = geno, y = lfa, fill = riego)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-##emmeans: comparación de medias 
+## emmeans: comparación de medias 
 
 ```{r}
 modelo <- lme4::lmer(hi ~ (1|bloque)+ geno * riego
@@ -266,12 +266,12 @@ ggplot(dtcm, aes(x = geno, y = emmean, fill = riego)) +
 ```
 
 
-#Analisis multivariado 
+# Analisis multivariado 
 ```{r}
 str(fb)
 ```
 
-##Correlación 
+## Correlación 
 ```{r}
 library(psych)
 library(tidyverse)
@@ -290,7 +290,7 @@ fb %>%
 
 
 
-##PCA: Análisis de componentes principales 
+## PCA: Análisis de componentes principales 
 
 ```{r}
 library(FactoMineR)
