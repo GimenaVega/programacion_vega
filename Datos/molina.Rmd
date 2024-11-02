@@ -1,0 +1,64 @@
+---
+title: "Impacto del estrés hídrico en la eficiencia de agua en el cultivo de papa, un estudio basado en spad_29 y rwc_84"
+author: "Grupo D"
+date: "2024-11-02"
+output:
+html_document:
+  css: style.css
+  toc: true
+  theme: united
+  toc_depth: 8
+  highlight: tango
+  
+---
+
+```{r}
+title: "EFICIENCIA DE USO DE AGUA EN QUINCE GENOTIPOS DE PAPA (Solanum tuberosum L.) BAJO CONDICIONES DE ESTRÉS HÍDRICO POR SEQUÍA"
+author: "Flavio Lozano"
+date: "`r Sys.Date()`"
+output: html_document
+```
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+
+```
+
+
+```{r}
+# Verificar nombres de columnas en los datos
+str(fb)
+
+# Calcular promedios por genotipo y riego
+map_data <- fb %>%
+  group_by(geno, riego) %>%
+  summarise(mean_spad = mean(spad_29, na.rm = TRUE),
+            mean_rwc = mean(rwc_84, na.rm = TRUE), .groups = "drop")
+
+# Convertir a formato largo para heatmap
+map_data_long <- map_data %>%
+  pivot_longer(cols = c(mean_spad, mean_rwc), names_to = "variable", values_to = "value")
+
+```
+
+
+```{r}
+ggplot(map_data_long, aes(x = geno, y = riego, fill = value)) +
+  geom_tile(color = "white") +
+  facet_wrap(~ variable, scales = "free") +
+  scale_fill_gradient(low = "lightblue", high = "darkblue") +
+  labs(title = "Mapa de Índice de SPAD y RWC por Genotipo y Riego",
+       x = "Genotipo",
+       y = "Riego",
+       fill = "Valor del Índice") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+

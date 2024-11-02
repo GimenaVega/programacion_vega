@@ -1,7 +1,7 @@
 ---
 title: "Impacto del estrés hídrico en la eficiencia de agua en el cultivo de papa, un estudio basado en spad_29 y rwc_84"
 
-author: "Nilson Julca Celiz, Lleyner Roman Peña, Alex Quispe Agular y Gimena Vega Chavez"
+author: "Nilson Julca Celiz, Lleyner Roman Peña, Alex Quispe Aguilar y Gimena Vega Chavez"
 format: 
   html:
     toc: true
@@ -10,13 +10,27 @@ format:
     embed-resources: true
     output-file: index
 ---
-# Introducción 
 
+```{r}
+R.version.string
 
-Dentro del marco de la tesis, rescatamos al cultivo de papa como clave en la agricultura mundial, pero es particularmente vulnerable al estrés hídrico, lo cual muchas veces va a reducir su rendimiento y calidad. El estudio de variables como el "Relative water content (RWC)" y el "Soil plant analysis development(spad_29)" y la relación entre ellas ha permitido poder identificar genotipos de papa mas resilientes a la sequía esto con el fin de optimizar el uso de recursos hídricos en la producción. Ahora al realizar una página web basada en R, esta plataforma nos va a poder ofrecer herramientas analiticas y estadisticas especializadas para evaluar estos indicadores, ayudando sobre todo a investigadores a tomar decisiones con mayor eficacia y bien informadas para contribuir con la agricultura. 
+cat("Project: ", getwd())
+```
 
+```{r}
+library(sessioninfo)
 
-# Data para la evalucion de variables  
+session_info()
+
+```
+
+# Introducción
+
+Dentro del marco de la tesis, rescatamos al cultivo de papa como clave en la agricultura mundial, pero es particularmente vulnerable al estrés hídrico, lo cual muchas veces va a reducir su rendimiento y calidad. El estudio de variables como el "Relative water content (RWC)" y el "Soil plant analysis development(spad_29)" y la relación entre ellas ha permitido poder identificar genotipos de papa mas resilientes a la sequía esto con el fin de optimizar el uso de recursos hídricos en la producción. Ahora al realizar una página web basada en R, esta plataforma nos va a poder ofrecer herramientas analiticas y estadisticas especializadas para evaluar estos indicadores, ayudando sobre todo a investigadores a tomar decisiones con mayor eficacia y bien informadas para contribuir con la agricultura.
+
+![](images/WhatsApp Image 2024-11-02 at 15.57.08.jpeg){fig-align="center" width="500"}
+
+# Data para la evalucion de variables
 
 ```{r}
 
@@ -38,8 +52,6 @@ str(fb)
 
 # Análisis de varianza en Soil Plant Analysis Development (spad_20) en respuesta a tratamientos de riego y genotipos de papa
 
-
-
 ```{r}
 
 modelo <- aov (formula = spad_29 ~  bloque + riego + geno + riego*geno
@@ -54,10 +66,9 @@ plot(modelo)
 
 Interpretación:
 
-Con el análisis de varianza (ANOVA) se hizo con el fin de poder examinar diferentes factores (bloques, tratamiento de riego, genotipo * riego) sobre el índice de spad_29.
-Según el grafico y resultado en este caso el efecto significativo de los genotipos sugiere que el índice de spad_29 podría verse como un criterio de selección efetivo para identificar genotipos de papa para poder ver las mejores condiciones de estrés hídrico.
+Con el análisis de varianza (ANOVA) se hizo con el fin de poder examinar diferentes factores (bloques, tratamiento de riego, genotipo \* riego) sobre el índice de spad_29. Según el grafico y resultado en este caso el efecto significativo de los genotipos sugiere que el índice de spad_29 podría verse como un criterio de selección efetivo para identificar genotipos de papa para poder ver las mejores condiciones de estrés hídrico.
 
-## Modelo lineal para la variable de Soil Plant Analysis Development en genotipos de papa bajo diferentes condiciones de riego 
+## Modelo lineal para la variable de Soil Plant Analysis Development en genotipos de papa bajo diferentes condiciones de riego
 
 ```{r}
 ggplot(fb, aes(x = geno, y = spad_29, colour = riego)) +
@@ -71,8 +82,7 @@ ggplot(fb, aes(x = geno, y = spad_29, colour = riego)) +
  
 ```
 
-
-Interpretación: Se puede visualizar el gráfico de cajas (boxplot) muestra la distribución del índice spad_29, entre distintos genotipos de papa en dos condicones de riego (irrigado y sequía). Las cajas de color rosa representan el tratamiento de irrigado y las celestes la sequía. Esto conincide con el analisis de ANOVA, donde no se detecto un efecto significativo del factor de riego sobre spad_29. 
+Interpretación: Se puede visualizar el gráfico de cajas (boxplot) muestra la distribución del índice spad_29, entre distintos genotipos de papa en dos condicones de riego (irrigado y sequía). Las cajas de color rosa representan el tratamiento de irrigado y las celestes la sequía. Esto conincide con el analisis de ANOVA, donde no se detecto un efecto significativo del factor de riego sobre spad_29.
 
 # Modelo lineal de Relative Water Content (%)
 
@@ -157,7 +167,7 @@ grupos <- tukey_result$groups %>%
 str(grupos)
 ```
 
-Interpretación: La prueba de Tukey sugiere que existen diferencias significativas en el índice SPAD_29 entre algunos genotipos y combinaciones de tratamientos de riego. 
+Interpretación: La prueba de Tukey sugiere que existen diferencias significativas en el índice SPAD_29 entre algunos genotipos y combinaciones de tratamientos de riego.
 
 ```{r}
 # Cargar ggplot2 para la visualización
@@ -241,7 +251,6 @@ ggplot(dtcm, aes(x = geno, y = emmean, fill = riego)) +
 
 Interpretación; El gráfico de barras muestra la media estimada de la variable rwc_84 (potencial hídrico relativo a 84 días) para diferentes genotipos, las barras están codificadas por colores, donde cada color representa una modalidad de riego.
 
-
 # Analisis multivariado
 
 ```{r}
@@ -267,7 +276,7 @@ fb %>%
 
 ```
 
-Interpretación:  Se pueden observar tanto correlaciones positivas como negativas.
+Interpretación: Se pueden observar tanto correlaciones positivas como negativas.
 
 ### PCA: Análisis de componentes principales
 
@@ -294,3 +303,10 @@ list(p1, p2) %>%
   plot_grid(plotlist= ., nrow = 1)
 ```
 
+# Discusión
+
+Mediante el análisis de varianza (ANOVA), se identificó que el genotipo es un factor significativo tanto para SPAD como para RWC, indicando que la variabilidad genética en la papa desempeña un papel crucial en la capacidad de la planta para mantener la actividad fotosintética y el contenido de agua bajo condiciones de sequía. Esta información fue respaldada por la prueba de Tukey, la cual permitió agrupar los genotipos en función de su respuesta fisiológica y detectar cuáles tienen una respuesta significativamente diferente en términos de clorofila y contenido hídrico. Por otro lado, el efecto del bloque no fue significativo (p = 0.5781), lo cual sugiere que las variaciones observadas en SPAD_29 no están influenciadas por la disposición espacial de los bloques en el experimento, reforzando así la robustez de los resultados obtenidos.
+
+# Conclusión
+
+Los análisis realizados han permitido identificar que los índices SPAD_29 y RWC_84 son herramientas clave en la selección de genotipos de papa con mayor tolerancia a la sequía, con una clara influencia del genotipo en su respuesta bajo estrés hídrico. La variabilidad genética observada sugiere que algunos genotipos poseen una mayor capacidad para mantener la actividad fotosintética y la retención de agua en condiciones de sequía, lo cual es prometedor para su uso en programas de mejoramiento.
