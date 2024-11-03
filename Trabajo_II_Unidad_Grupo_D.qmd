@@ -26,11 +26,11 @@ session_info()
 
 # Introducción
 
-Dentro del marco de la tesis, rescatamos al cultivo de papa como clave en la agricultura mundial, pero es particularmente vulnerable al estrés hídrico, lo cual muchas veces va a reducir su rendimiento y calidad. El estudio de variables como el "Relative water content (RWC)" y el "Soil plant analysis development(spad_29)" y la relación entre ellas ha permitido poder identificar genotipos de papa mas resilientes a la sequía esto con el fin de optimizar el uso de recursos hídricos en la producción. Ahora al realizar una página web basada en R, esta plataforma nos va a poder ofrecer herramientas analiticas y estadisticas especializadas para evaluar estos indicadores, ayudando sobre todo a investigadores a tomar decisiones con mayor eficacia y bien informadas para contribuir con la agricultura.
+Dentro del marco de la tesis, rescatamos al cultivo de papa como clave en la agricultura mundial, pero es particularmente vulnerable al estrés hídrico, lo cual muchas veces va a reducir su rendimiento y calidad. El estudio de variables como el "Relative water content (rwc_84)" y el "Soil plant analysis development (spad_29)" y la relación entre ellas ha permitido poder identificar genotipos de papa mas resilientes a la sequía esto con el fin de optimizar el uso de recursos hídricos en la producción. Ahora al realizar una página web basada en R, esta plataforma nos va a poder ofrecer herramientas analiticas y estadisticas especializadas para evaluar estos indicadores, ayudando sobre todo a investigadores a tomar decisiones con mayor eficacia y bien informadas para contribuir con la agricultura.
 
-![](images/WhatsApp Image 2024-11-02 at 15.57.08.jpeg){fig-align="center" width="500"}
+![](images/Captura.PNG){fig-align="center" width="555"}
 
-# Data para la evalucion de variables
+# Data para la evaluación de variables
 
 ```{r}
 
@@ -50,7 +50,7 @@ str(fb)
 
 ```
 
-# Análisis de varianza en Soil Plant Analysis Development (spad_20) en respuesta a tratamientos de riego y genotipos de papa
+# Análisis de varianza en Soil Plant Analysis Development (spad_29) en respuesta a tratamientos de riego y genotipos de papa
 
 ```{r}
 
@@ -64,9 +64,7 @@ anova(modelo)
 plot(modelo)
 ```
 
-Interpretación:
-
-Con el análisis de varianza (ANOVA) se hizo con el fin de poder examinar diferentes factores (bloques, tratamiento de riego, genotipo \* riego) sobre el índice de spad_29. Según el grafico y resultado en este caso el efecto significativo de los genotipos sugiere que el índice de spad_29 podría verse como un criterio de selección efetivo para identificar genotipos de papa para poder ver las mejores condiciones de estrés hídrico.
+Interpretación: Con el análisis de varianza (ANOVA) se hizo con el fin de poder examinar diferentes factores (bloques, tratamiento de riego, genotipo \* riego) sobre el índice de spad_29. Según el grafico y resultado en este caso el efecto significativo de los genotipos sugiere que el índice de spad_29 podría verse como un criterio de selección efetivo para identificar genotipos de papa para poder ver las mejores condiciones de estrés hídrico.
 
 ## Modelo lineal para la variable de Soil Plant Analysis Development en genotipos de papa bajo diferentes condiciones de riego
 
@@ -303,6 +301,12 @@ list(p1, p2) %>%
   plot_grid(plotlist= ., nrow = 1)
 ```
 
+# Mapa de indice de spad_29 y rwc_84
+
+![](images/WhatsApp%20Image%202024-11-01%20at%2022.26.52.jpeg){fig-align="center"}
+
+Interpretación: Este gráfico muestra el Índice de SPAD y el Contenido Relativo de Agua (RWC) en las hojas de diferentes genotipos de plantas bajo dos condiciones de riego: sequía e irrigación.
+
 # Discusión
 
 Mediante el análisis de varianza (ANOVA), se identificó que el genotipo es un factor significativo tanto para SPAD como para RWC, indicando que la variabilidad genética en la papa desempeña un papel crucial en la capacidad de la planta para mantener la actividad fotosintética y el contenido de agua bajo condiciones de sequía. Esta información fue respaldada por la prueba de Tukey, la cual permitió agrupar los genotipos en función de su respuesta fisiológica y detectar cuáles tienen una respuesta significativamente diferente en términos de clorofila y contenido hídrico. Por otro lado, el efecto del bloque no fue significativo (p = 0.5781), lo cual sugiere que las variaciones observadas en SPAD_29 no están influenciadas por la disposición espacial de los bloques en el experimento, reforzando así la robustez de los resultados obtenidos.
@@ -310,3 +314,9 @@ Mediante el análisis de varianza (ANOVA), se identificó que el genotipo es un 
 # Conclusión
 
 Los análisis realizados han permitido identificar que los índices SPAD_29 y RWC_84 son herramientas clave en la selección de genotipos de papa con mayor tolerancia a la sequía, con una clara influencia del genotipo en su respuesta bajo estrés hídrico. La variabilidad genética observada sugiere que algunos genotipos poseen una mayor capacidad para mantener la actividad fotosintética y la retención de agua en condiciones de sequía, lo cual es prometedor para su uso en programas de mejoramiento.
+
+![](images/WhatsApp Image 2024-11-02 at 15.57.08-01.jpeg){fig-align="center" width="555"}
+
+# Referencia bibliografica
+
+Lozano-Isla, F., Farfan-Vignolo, ER, Gutierrez, R. et al. El índice de cosecha es un rasgo clave para la selección de genotipos de papa tolerantes a la sequía ( Solanum tuberosum ). J. Crop Sci. Biotechnol. 27 , 91–103 (2024). https://doi.org/10.1007/s12892-023-00215-2
